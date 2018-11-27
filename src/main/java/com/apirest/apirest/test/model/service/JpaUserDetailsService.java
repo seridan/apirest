@@ -45,8 +45,8 @@ public class JpaUserDetailsService implements UserDetailsService, Serializable {
         }
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                true, true, true, true, authorities) {
-        };
+                true, true, true, true, authorities);
+
     }
 
 
