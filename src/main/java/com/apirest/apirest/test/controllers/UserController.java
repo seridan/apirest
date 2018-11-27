@@ -16,7 +16,7 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    @Qualifier("service")
+
     private IUserService userService;
 
     @GetMapping(value = "/list")

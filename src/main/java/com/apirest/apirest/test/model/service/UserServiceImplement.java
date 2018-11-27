@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.xml.ws.ServiceMode;
 import java.util.List;
 
-@Service("service")
+@Service
 public class UserServiceImplement implements IUserService{
 
     @Autowired
-    @Qualifier("repository")
+
     private IUserDao userDao;
 
     @Transactional(readOnly = true)
