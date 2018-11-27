@@ -33,13 +33,13 @@ public class UserServiceImplement implements IUserService{
     @Transactional(readOnly = true)
     @Override
     public User findOne(Long id) {
-        return userDao.findOne(id);
+        return userDao.findById(id).orElse(null);
     }
 
     @Transactional
     @Override
     public void delete(Long id) {
-        userDao.delete(id);
+        userDao.deleteById(id);
 
     }
 }
