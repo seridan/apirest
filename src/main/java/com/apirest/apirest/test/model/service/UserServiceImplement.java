@@ -20,7 +20,7 @@ public class UserServiceImplement implements IUserService{
     @Transactional(readOnly = true)
     @Override
     public List<User> findAll() {
-        return userDao.findAll();
+        return (List<User>) userDao.findAll();
     }
 
     @Transactional
@@ -42,4 +42,6 @@ public class UserServiceImplement implements IUserService{
         userDao.deleteById(id);
 
     }
+
+   
 }
