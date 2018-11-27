@@ -14,7 +14,7 @@ public interface IUserService {
 
     public void delete(Long id);
 
-    //public User findByUserName(String username);
+    //public User findByUsername(String username);
 
 }
 

@@ -7,6 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
-public interface IUserDao extends CrudRepository<User, Long> {
+public interface IUserDao extends JpaRepository<User, Long> {
+
+    public User findByUsername(String username);
 
 }
