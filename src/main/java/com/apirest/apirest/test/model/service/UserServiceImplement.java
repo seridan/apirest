@@ -27,7 +27,6 @@ public class UserServiceImplement implements IUserService{
     @Override
     public void save(User user) {
         userDao.save(user);
-
     }
 
     @Transactional(readOnly = true)

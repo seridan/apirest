@@ -1,6 +1,7 @@
 package com.apirest.apirest.test;
 
 
+import com.apirest.apirest.test.auth.handler.LoginSuccessHandler;
 import com.apirest.apirest.test.model.service.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private LoginSuccessHandler successHandler;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -29,7 +32,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                //.successHandler(successHandler)
+                .successHandler(successHandler)
                 .permitAll()
                 .and()
                 .csrf().disable()

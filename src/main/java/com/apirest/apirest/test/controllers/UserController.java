@@ -3,9 +3,6 @@ package com.apirest.apirest.test.controllers;
 import com.apirest.apirest.test.model.entity.User;
 import com.apirest.apirest.test.model.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
