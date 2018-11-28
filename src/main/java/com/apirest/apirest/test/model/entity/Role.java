@@ -9,10 +9,9 @@ import java.io.Serializable;
 @Table(name="roles", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_name"})})
 public class Role implements Serializable {
 
-    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
     private Long roleid;
 
@@ -42,4 +41,7 @@ public class Role implements Serializable {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
+
+    private static final long serialVersionUID = 1L;
+
 }
