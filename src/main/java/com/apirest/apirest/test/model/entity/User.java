@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="users")
+@Table(name="users", uniqueConstraints = {@UniqueConstraint(name = "APP_USER_UK", columnNames = "user_name")})
 public class  User implements Serializable {
 
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
 
     @Column(name = "user_id")
     private Long id;
@@ -24,9 +24,9 @@ public class  User implements Serializable {
     @Column(length = 60)
     private String password;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    /*@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private List<Role> roles;
+    private List<Role> roles;*/
 
     public User() {
 
@@ -36,10 +36,10 @@ public class  User implements Serializable {
         this.name = name;
     }
 
-    public User(String name, List<Role> roles) {
+    /*public User(String name, List<Role> roles) {
         this.name = name;
         this.roles = roles;
-    }
+    }*/
 
     public User(String name, String password) {
 
@@ -47,7 +47,7 @@ public class  User implements Serializable {
         this.password = password;
     }
 
-    public User(String name, String password, List<Role> roles) {
+    /*public User(String name, String password, List<Role> roles) {
         this.name = name;
         this.password = password;
         this.roles = roles;
@@ -58,7 +58,7 @@ public class  User implements Serializable {
         this.name = name;
         this.password = password;
         this.roles = roles;
-    }
+    }*/
 
     public Long getId() {
         return id;
@@ -80,16 +80,16 @@ public class  User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-
+/*
     public List<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
-    }
+    }*/
 
-
+/*
     @PrePersist
      private void preInsert() {
 
@@ -98,7 +98,7 @@ public class  User implements Serializable {
             defaultRole.add(new Role("ROLE_STANDARD"));
             this.roles = defaultRole;
         }
-    }
+    }*/
 }
 
 

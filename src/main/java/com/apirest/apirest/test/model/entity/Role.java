@@ -6,13 +6,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name="roles", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_name"})})
+@Table(name="roles", uniqueConstraints = {@UniqueConstraint(name = "APP_ROLE_UK", columnNames =  "role_name")})
 public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "role_id")
     private Long roleid;
 
