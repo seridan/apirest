@@ -2,6 +2,7 @@ package com.apirest.apirest.test.model.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,7 +13,7 @@ public class  User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     @Column(name = "user_id")
     private Long id;
@@ -28,15 +29,28 @@ public class  User implements Serializable {
     private List<Role> roles;
 
     public User() {
+
     }
 
     public User(String name) {
         this.name = name;
     }
 
+    public User(String name, List<Role> roles) {
+        this.name = name;
+        this.roles = roles;
+    }
+
     public User(String name, String password) {
+
         this.name = name;
         this.password = password;
+    }
+
+    public User(String name, String password, List<Role> roles) {
+        this.name = name;
+        this.password = password;
+        this.roles = roles;
     }
 
     public User(Long id, String name, String password, List<Role> roles) {
@@ -74,4 +88,17 @@ public class  User implements Serializable {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
+
+
+    @PrePersist
+     private void preInsert() {
+
+        if (this.roles == null) {
+            List<Role> defaultRole = new ArrayList<>();
+            defaultRole.add(new Role("ROLE_STANDARD"));
+            this.roles = defaultRole;
+        }
+    }
 }
+
+

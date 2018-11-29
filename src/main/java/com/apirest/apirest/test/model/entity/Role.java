@@ -12,7 +12,7 @@ public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
     private Long roleid;
 
@@ -22,8 +22,8 @@ public class Role implements Serializable {
     public Role() {
     }
 
-    public Role(Long roleid, String roleName) {
-        this.roleid = roleid;
+
+    public Role( String roleName) {
         this.roleName = roleName;
     }
 
@@ -42,4 +42,10 @@ public class Role implements Serializable {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
+
+   /* @PrePersist
+    void preInsert() {
+        if (this.roleName == null)
+            this.roleName = "ROLE_STANDAR";
+    }*/
 }
