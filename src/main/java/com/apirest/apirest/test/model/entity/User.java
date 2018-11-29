@@ -2,6 +2,7 @@ package com.apirest.apirest.test.model.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -77,4 +78,14 @@ public class  User implements Serializable {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
+
+    @PrePersist
+    private void setDefaultRole() {
+        if (this.roles == null) {
+            List<Role> defaultRole = new ArrayList<>();
+            defaultRole.add(new Role("ROLE_STANDARD"));
+            this.roles = defaultRole;
+        }
+    }
 }
+
