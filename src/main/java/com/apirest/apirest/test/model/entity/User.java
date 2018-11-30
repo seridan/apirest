@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="users")
+@Table(name="users", uniqueConstraints = {@UniqueConstraint(name = "APP_USER_UK", columnNames = "user_name")})
 public class  User implements Serializable {
 
 
@@ -24,15 +24,9 @@ public class  User implements Serializable {
     @Column(length = 60)
     private String password;
 
-    @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"))
-
-    private List<Role> roles;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "Id")
+    private UserRole roles;
 
     public User() {
 
@@ -42,10 +36,10 @@ public class  User implements Serializable {
         this.name = name;
     }
 
-    public User(String name, List<Role> roles) {
+    /*public User(String name, List<Role> roles) {
         this.name = name;
         this.roles = roles;
-    }
+    }*/
 
     public User(String name, String password) {
 
@@ -53,11 +47,18 @@ public class  User implements Serializable {
         this.password = password;
     }
 
-    public User(String name, String password, List<Role> roles) {
+    /*public User(String name, String password, List<Role> roles) {
         this.name = name;
         this.password = password;
         this.roles = roles;
     }
+
+    public User(Long id, String name, String password, List<Role> roles) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.roles = roles;
+    }*/
 
     public Long getId() {
         return id;
@@ -80,15 +81,15 @@ public class  User implements Serializable {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public UserRole getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(User role) {
         this.roles = roles;
     }
 
-    /*
+/*
     @PrePersist
      private void preInsert() {
 
