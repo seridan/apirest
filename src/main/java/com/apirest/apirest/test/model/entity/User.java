@@ -24,9 +24,9 @@ public class  User implements Serializable {
     @Column(length = 60)
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = UserRole.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "Id")
-    private UserRole roles;
+    private List<UserRole> roles;
 
     public User() {
 
@@ -47,18 +47,18 @@ public class  User implements Serializable {
         this.password = password;
     }
 
-    /*public User(String name, String password, List<Role> roles) {
+    public User(String name, String password, List<UserRole> roles) {
         this.name = name;
         this.password = password;
         this.roles = roles;
     }
 
-    public User(Long id, String name, String password, List<Role> roles) {
+    public User(Long id, String name, String password, List<UserRole> roles) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.roles = roles;
-    }*/
+    }
 
     public Long getId() {
         return id;
@@ -81,15 +81,15 @@ public class  User implements Serializable {
         this.password = password;
     }
 
-    public UserRole getRoles() {
+    public List<UserRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(User role) {
+    public void setRoles(List<UserRole> roles) {
         this.roles = roles;
     }
 
-/*
+  /*
     @PrePersist
      private void preInsert() {
 
