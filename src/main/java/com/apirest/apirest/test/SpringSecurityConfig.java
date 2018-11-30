@@ -26,19 +26,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("api/delete").permitAll()
-                .antMatchers("/api/list").hasRole("ADMIN")
-                .antMatchers("api/save").hasRole("STANDARD")
+        http.authorizeRequests()
+                .antMatchers("/api/list").hasRole("STANDARD")
+                .antMatchers("/api/save","/api/delete/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .successHandler(successHandler)
+                //.successHandler(successHandler)
                 .permitAll()
                 .and()
                 .csrf().disable()
                 .logout().permitAll();
-
-
     }
 
     @Autowired
