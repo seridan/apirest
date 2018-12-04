@@ -16,12 +16,14 @@ public class UserController {
 
     private IUserService userService;
 
+    @CrossOrigin
     @GetMapping(value = "/list")
     public List<User> getAll() {
         return userService.findAll();
     }
 
 
+    @CrossOrigin
     @PostMapping(value = "/user")
     public void addUser(@RequestBody @Valid User user) {
          userService.save(user);

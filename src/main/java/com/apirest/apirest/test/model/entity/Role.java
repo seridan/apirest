@@ -46,12 +46,6 @@ public class Role implements Serializable {
         this.roleName = roleName;
     }
 
-    @PrePersist
-    void preInsert() {
-        if (this.roleName == null)
-            this.roleName = "USER";
-    }
-
     private static final long serialVersionUID = 1L;
 
 }

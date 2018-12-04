@@ -1,5 +1,7 @@
 package com.apirest.apirest.test.model.entity;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,6 +13,9 @@ public class  User implements Serializable {
 
 
     private static final long serialVersionUID = 1L;
+
+    @Autowired
+    private Role role;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +59,9 @@ public class  User implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+
+
     public String getUsername() {
         return username;
     }
@@ -81,11 +89,16 @@ public class  User implements Serializable {
 
     @PrePersist
     private void setDefaultRole() {
-        if (this.roles == null) {
-            List<Role> defaultRole = new ArrayList<>();
-            defaultRole.add(new Role("ROLE_STANDARD"));
-            this.roles = defaultRole;
+
+        for (Role role : this.roles ) {
+            if(role.getRoleName().equals("")) {
+                List<Role> defaultRole = new ArrayList<>();
+                defaultRole.add(new Role("ROLE_STANDARD"));
+                this.roles = defaultRole;
+            }
         }
+
+
     }
 }
 
