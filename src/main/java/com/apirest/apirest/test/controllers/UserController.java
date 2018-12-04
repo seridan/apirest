@@ -3,6 +3,7 @@ package com.apirest.apirest.test.controllers;
 import com.apirest.apirest.test.model.entity.User;
 import com.apirest.apirest.test.model.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,7 +18,7 @@ public class UserController {
     private IUserService userService;
 
     @CrossOrigin
-    @GetMapping(value = "/list")
+    @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAll() {
         return userService.findAll();
     }
