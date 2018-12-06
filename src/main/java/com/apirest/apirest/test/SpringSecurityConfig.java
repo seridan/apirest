@@ -1,6 +1,8 @@
 package com.apirest.apirest.test;
 
 
+import com.apirest.apirest.test.auth.filter.JWTAuthenticationFilter;
+import com.apirest.apirest.test.auth.filter.JWTAuthorizationFilter;
 import com.apirest.apirest.test.auth.handler.LoginSuccessHandler;
 import com.apirest.apirest.test.auth.handler.RestAuthenticationEntryPoint;
 import com.apirest.apirest.test.auth.handler.RestAuthenticationFailureHandler;
@@ -13,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -46,13 +49,20 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/api/list").hasRole("ADMIN")
-                .antMatchers("/api/user", "/api/delete/**").hasRole("ADMIN");
+                .antMatchers("/list", "/").hasRole("ADMIN")
+                //.antMatchers("/api/user", "/api/delete/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
+                .and()
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         http.cors();
         //http.csrf().disable();
-        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
-        http.formLogin().successHandler(authenticationSuccessHandler);
-        http.formLogin().failureHandler(authenticationFailureHandler);
+       // http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
+       // http.formLogin().successHandler(authenticationSuccessHandler);
+       // http.formLogin().failureHandler(authenticationFailureHandler);
     }
 
 
