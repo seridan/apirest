@@ -1,13 +1,9 @@
 package com.apirest.apirest.test.auth.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import com.apirest.apirest.test.auth.service.JWTService;
+import com.apirest.apirest.test.auth.service.JWTServiceImplement;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -17,55 +13,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
 
 public class JWTAuthorizationFilter  extends BasicAuthenticationFilter {
 
+    public static final Key SECRET_KEY = JWTServiceImplement.SECRET_KEY;
 
-    public static final Key SECRET_KEY = JWTAuthenticationFilter.SECRET_KEY;
+    private JWTService jwtService;
 
-    public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
+    public JWTAuthorizationFilter(AuthenticationManager authenticationManager, JWTService jwtService) {
         super(authenticationManager);
+        this.jwtService = jwtService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
 
-        String header = request.getHeader("Authorization");
+        String header = request.getHeader(JWTServiceImplement.HEADER_STRING);
 
         if (!requiresAuthentication(header)) { //(header == null || !header.toLowerCase().startsWith("Bearer ")
             chain.doFilter(request, response);
             return;
         }
 
-        boolean tokenValid;
-        Claims token = null;
-
-        try {
-
-            token = Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
-                    .parseClaimsJws(header.replace("Bearer ", ""))
-                    .getBody();
-            tokenValid = true;
-        }catch (JwtException | IllegalArgumentException e) {
-
-            tokenValid =false;
-        }
-
         UsernamePasswordAuthenticationToken authentication = null;
 
-        if(tokenValid) {
-            String username = token.getSubject();
-            Object roles = token.get("authorities");
+        if(jwtService.validate(header)) {
 
-            Collection<? extends GrantedAuthority> authorities = Arrays.asList(new ObjectMapper()
-                    .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityMixin.class)
-                    .readValue(roles.toString().getBytes(), SimpleGrantedAuthority[].class));
 
-            authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            authentication = new UsernamePasswordAuthenticationToken(jwtService.getUsername(header),
+                    null, jwtService.getRoles(header));
 
         }
 
@@ -76,7 +53,7 @@ public class JWTAuthorizationFilter  extends BasicAuthenticationFilter {
 
     protected boolean requiresAuthentication(String header) {
 
-        if (header == null || !header.startsWith("Bearer ")) {
+        if (header == null || !header.startsWith(JWTServiceImplement.TOKEN_PREFIX)) {
             return false;
         }
 

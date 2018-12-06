@@ -7,6 +7,7 @@ import com.apirest.apirest.test.auth.handler.LoginSuccessHandler;
 import com.apirest.apirest.test.auth.handler.RestAuthenticationEntryPoint;
 import com.apirest.apirest.test.auth.handler.RestAuthenticationFailureHandler;
 import com.apirest.apirest.test.auth.handler.RestAuthenticationSuccessHandler;
+import com.apirest.apirest.test.auth.service.JWTService;
 import com.apirest.apirest.test.model.service.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -46,15 +47,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JpaUserDetailsService userDetailsService;
 
+    @Autowired
+    private JWTService jwtService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/list", "/").hasRole("ADMIN")
-                //.antMatchers("/api/user", "/api/delete/**").hasRole("ADMIN")
+                .antMatchers("api/list", "/").permitAll()
+                .antMatchers("/api/user", "/api/delete/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtService))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtService))
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

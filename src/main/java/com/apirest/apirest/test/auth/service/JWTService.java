@@ -9,6 +9,7 @@ import io.jsonwebtoken.Claims;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.IOException;
 import java.util.Collection;
 
 public interface JWTService {
@@ -17,7 +18,7 @@ public interface JWTService {
      * Método que se encarga de crear el token.
      * @param authentication Nos permite obtener los roles y el username.
      */
-    public String create(Authentication authentication);
+    public String create(Authentication authentication) throws IOException;
 
 
     /**
@@ -46,7 +47,7 @@ public interface JWTService {
      * Collection de GrantedAuthority mediante el ObjectMapper().
      * @param token de donde obtenemos los roles.
      */
-    public Collection<? extends GrantedAuthority> getRoles(String token);
+    public Collection<? extends GrantedAuthority> getRoles(String token) throws IOException;
 
     /**
      * Método para resolver el token, quitar el Bearer

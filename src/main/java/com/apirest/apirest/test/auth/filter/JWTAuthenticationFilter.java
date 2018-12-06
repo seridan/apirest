@@ -1,41 +1,34 @@
 package com.apirest.apirest.test.auth.filter;
 
 
-
+import com.apirest.apirest.test.auth.service.JWTService;
+import com.apirest.apirest.test.auth.service.JWTServiceImplement;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
-    static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);// Llave secreta.
+    private JWTService jwtService;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTService jwtService) {
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
         setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
     }
 
@@ -79,39 +72,20 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return authenticationManager.authenticate(authToken);
     }
 
-
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 
-        //Obtenemos el usuario desde authResult, ya que está autenticado y contiene todos los datos del usuario, que
-        //pertenece a la clase org.springframework.security.core.userdetails.User;
-        String username = ( (User) authResult.getPrincipal()).getUsername();
-
-        //Obtenemos los roles...
-        Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
-        //... Pero los roles no se pudeden pasar como un metodo setRoles etc, lo haremos obteniendo los Claims
-        Claims claims = Jwts.claims();
-        //Añadimos la clave authorities y el valor roles, pero debemos pasarlos a JSON.
-        claims.put("authorities", new ObjectMapper().writeValueAsString(roles));
-
-        //Creacion y compactacion del token creado a partir del token de la clase Authentication.
-        String token = Jwts.builder()
-                .setClaims(claims)// Pasamos los roles a través del objeto claims
-                .setSubject(username) //También lo podemos obtener directamente: authResult.getName()
-                .signWith(SECRET_KEY)
-                .setIssuedAt(new Date()) //Fecha de creacion
-                .setExpiration(new Date(System.currentTimeMillis() + 14000000L))// Fecha de expiracion Long (4 horas)
-                .compact();
-
+        //Obtenemos el token a traves del metodo create de la clase JWTService.
+        String token = jwtService.create(authResult);
 
         //Pasamos el token en la cabecera de la respuesta para el usuario. Prefijo Bearer para pasar el token al cliente
-        response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader(JWTServiceImplement.HEADER_STRING, JWTServiceImplement.TOKEN_PREFIX + token);
 
         Map<String, Object> body = new HashMap<>();
         body.put("token", token); //Pasamos el token
         body.put("user", (User) authResult.getPrincipal());// El user
-        body.put("message", String.format("Hello %s, you have successfully logged in", username));// Mensaje
+        body.put("message", String.format("Hello %s, you have successfully logged in", authResult.getName()));
 
         //Obtenemos el writer de la respuesta
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));//Lo pasamos a JSON
