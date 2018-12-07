@@ -16,7 +16,7 @@ import java.security.Key;
 
 public class JWTAuthorizationFilter  extends BasicAuthenticationFilter {
 
-    public static final Key SECRET_KEY = JWTServiceImplement.SECRET_KEY;
+    //public static final Key SECRET_KEY = JWTServiceImplement.SECRET_KEY;
 
     private JWTService jwtService;
 

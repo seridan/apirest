@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin(origins = {"http://localhost:8080"})
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -17,8 +18,8 @@ public class UserController {
 
     private IUserService userService;
 
-    @CrossOrigin
-    @GetMapping(value = {"/list" , "/"})
+
+    @GetMapping(value = {"/list" })
     public List<User> getAll() {
         return userService.findAll();
     }
@@ -26,7 +27,7 @@ public class UserController {
 
     @CrossOrigin
     @PostMapping(value = "/user")
-    public void addUser(@RequestBody @Valid User user) {
+    public void addUser(@RequestBody User user) {
          userService.save(user);
     }
 

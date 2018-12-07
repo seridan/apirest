@@ -42,14 +42,13 @@ public class JWTServiceImplement implements JWTService{
         claims.put("authorities", new ObjectMapper().writeValueAsString(roles));
 
         //Creacion y compactacion del token creado a partir del token de la clase Authentication.
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setClaims(claims)// Pasamos los roles a través del objeto claims
                 .setSubject(username) //También lo podemos obtener directamente: authResult.getName()
                 .signWith(SECRET_KEY)
                 .setIssuedAt(new Date()) //Fecha de creacion
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_DATE))// Fecha de expiracion Long (4 horas)
                 .compact();
-        return token;
     }
 
     @Override
@@ -68,12 +67,10 @@ public class JWTServiceImplement implements JWTService{
     @Override
     public Claims getClaims(String token) {
 
-        Claims claims = Jwts.parser()
+        return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(resolve(token))
                 .getBody();
-
-        return claims;
     }
 
     @Override
