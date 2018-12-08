@@ -46,7 +46,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.cors();
+        http.cors().configurationSource(corsConfigurationSource());
 
     }
 

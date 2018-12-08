@@ -21,6 +21,7 @@ public class UserController {
     private IUserService userService;
 
 
+    @CrossOrigin
     @GetMapping(value = {"/list"})
     public List<User> getAll() {
         return userService.findAll();
