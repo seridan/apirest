@@ -22,8 +22,8 @@ import java.util.Date;
 @Component //Con esta anotacion la podremos inyectar, como por ejemplo en la clase SpringSecurityConfig.
 public class JWTServiceImplement implements JWTService{
 
-    public static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);// Llave secreta.
-    public static final Long EXPIRATION_DATE = 14000000L;// Valor del tiempo de expiración.
+    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);// Llave secreta.
+    private static final Long EXPIRATION_DATE = 14000000L;// Valor del tiempo de expiración.
     public static final String TOKEN_PREFIX = "Bearer ";// Prefijo del token.
     public static final String HEADER_STRING = "Authorization";
 
@@ -42,13 +42,15 @@ public class JWTServiceImplement implements JWTService{
         claims.put("authorities", new ObjectMapper().writeValueAsString(roles));
 
         //Creacion y compactacion del token creado a partir del token de la clase Authentication.
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .setClaims(claims)// Pasamos los roles a través del objeto claims
                 .setSubject(username) //También lo podemos obtener directamente: authResult.getName()
                 .signWith(SECRET_KEY)
                 .setIssuedAt(new Date()) //Fecha de creacion
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_DATE))// Fecha de expiracion Long (4 horas)
                 .compact();
+
+        return token;
     }
 
     @Override
@@ -67,10 +69,12 @@ public class JWTServiceImplement implements JWTService{
     @Override
     public Claims getClaims(String token) {
 
-        return Jwts.parser()
+        Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(resolve(token))
                 .getBody();
+
+        return claims;
     }
 
     @Override
@@ -86,7 +90,7 @@ public class JWTServiceImplement implements JWTService{
                 .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityMixin.class)
                 .readValue(roles.toString().getBytes(), SimpleGrantedAuthority[].class));
 
-        return null;
+        return authorities;
     }
 
     @Override

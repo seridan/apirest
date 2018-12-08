@@ -4,6 +4,8 @@ import com.apirest.apirest.test.model.entity.User;
 import com.apirest.apirest.test.model.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,12 +21,13 @@ public class UserController {
     private IUserService userService;
 
 
-    @GetMapping(value = {"/list" })
+    @GetMapping(value = {"/list"})
     public List<User> getAll() {
         return userService.findAll();
     }
 
 
+    @Secured({"ROLE_ADMIN"})
     @CrossOrigin
     @PostMapping(value = "/user")
     public void addUser(@RequestBody User user) {
