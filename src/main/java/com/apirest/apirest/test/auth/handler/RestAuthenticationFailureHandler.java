@@ -1,5 +1,5 @@
 package com.apirest.apirest.test.auth.handler;
-
+/*
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -18,3 +18,4 @@ public class RestAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         super.onAuthenticationFailure(request, response, exception);
     }
 }
+*/

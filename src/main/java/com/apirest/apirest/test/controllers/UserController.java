@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,9 +18,10 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-
     private IUserService userService;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @CrossOrigin
     @GetMapping(value = {"/list"})
@@ -32,6 +34,9 @@ public class UserController {
     @CrossOrigin
     @PostMapping(value = "/user")
     public void addUser(@RequestBody User user) {
+        String pass = user.getPassword();
+        String bcryptPassword = passwordEncoder.encode(pass);
+        user.setPassword(bcryptPassword);
          userService.save(user);
     }
 

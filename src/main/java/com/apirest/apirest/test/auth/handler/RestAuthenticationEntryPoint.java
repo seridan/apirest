@@ -1,4 +1,5 @@
 package com.apirest.apirest.test.auth.handler;
+/*
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -21,3 +22,4 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     }
 }
+*/
