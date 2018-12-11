@@ -1,15 +1,12 @@
 package com.apirest.apirest.test.model.entity;
 
-import org.springframework.context.annotation.Configuration;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name="roles", uniqueConstraints = {@UniqueConstraint(name = "APP_ROLE_UK", columnNames =  "role_name")})
+@Table(name="roles", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_name"})})
 public class Role implements Serializable {
 
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +19,12 @@ public class Role implements Serializable {
     public Role() {
     }
 
+    public Role(String roleName) {
+        this.roleName = roleName;
+    }
 
-    public Role( String roleName) {
+    public Role(Long roleid, String roleName) {
+        this.roleid = roleid;
         this.roleName = roleName;
     }
 
@@ -43,9 +44,6 @@ public class Role implements Serializable {
         this.roleName = roleName;
     }
 
-   /* @PrePersist
-    void preInsert() {
-        if (this.roleName == null)
-            this.roleName = "ROLE_STANDAR";
-    }*/
+    private static final long serialVersionUID = 1L;
+
 }

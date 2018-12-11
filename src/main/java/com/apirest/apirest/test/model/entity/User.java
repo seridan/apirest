@@ -1,61 +1,53 @@
 package com.apirest.apirest.test.model.entity;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="users", uniqueConstraints = {@UniqueConstraint(name = "APP_USER_UK", columnNames = "user_name")})
+@Table(name="users")
 public class  User implements Serializable {
 
 
     private static final long serialVersionUID = 1L;
 
+    @Autowired
+    private Role role;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     @Column(name = "user_id")
     private Long id;
 
     @Column(name = "user_name")
-    private String name;
+    private String username;
 
     @Column(length = 60)
     private String password;
 
-    @ManyToOne(targetEntity = UserRole.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "Id")
-    private List<UserRole> roles;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<Role> roles;
 
     public User() {
-
     }
 
-    public User(String name) {
-        this.name = name;
+    public User(String username) {
+        this.username = username;
     }
 
-    /*public User(String name, List<Role> roles) {
-        this.name = name;
-        this.roles = roles;
-    }*/
-
-    public User(String name, String password) {
-
-        this.name = name;
+    public User(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
-    public User(String name, String password, List<UserRole> roles) {
-        this.name = name;
-        this.password = password;
-        this.roles = roles;
-    }
-
-    public User(Long id, String name, String password, List<UserRole> roles) {
+    public User(Long id, String username, String password, List<Role> roles) {
         this.id = id;
-        this.name = name;
+        this.username = username;
         this.password = password;
         this.roles = roles;
     }
@@ -63,14 +55,20 @@ public class  User implements Serializable {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
-    public String getName() {
-        return name;
+
+
+
+    public String getUsername() {
+        return username;
     }
-    public void setName(String name) {
-        this.name = name;
+
+    public void setUsername(String username)
+    {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -81,24 +79,25 @@ public class  User implements Serializable {
         this.password = password;
     }
 
-    public List<UserRole> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<UserRole> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
-  /*
     @PrePersist
-     private void preInsert() {
+    private void setDefaultRole() {
 
-        if (this.roles == null) {
-            List<Role> defaultRole = new ArrayList<>();
-            defaultRole.add(new Role("ROLE_STANDARD"));
-            this.roles = defaultRole;
+        for (Role role : this.roles ) {
+            if(role.getRoleName().equals("")) {
+                List<Role> defaultRole = new ArrayList<>();
+                defaultRole.add(new Role("ROLE_STANDARD"));
+                this.roles = defaultRole;
+            }
         }
-    }*/
+
+
+    }
 }
-
-
