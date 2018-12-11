@@ -12,11 +12,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.Key;
+
 
 public class JWTAuthorizationFilter  extends BasicAuthenticationFilter {
-
-    //public static final Key SECRET_KEY = JWTServiceImplement.SECRET_KEY;
 
     private JWTService jwtService;
 

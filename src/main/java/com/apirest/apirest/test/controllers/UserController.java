@@ -3,13 +3,10 @@ package com.apirest.apirest.test.controllers;
 import com.apirest.apirest.test.model.entity.User;
 import com.apirest.apirest.test.model.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @CrossOrigin(origins = {"http://localhost:8080"})

@@ -1,7 +1,5 @@
 package com.apirest.apirest.test.model.entity;
 
-import org.springframework.context.annotation.Configuration;
-
 import javax.persistence.*;
 import java.io.Serializable;
 

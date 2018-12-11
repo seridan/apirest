@@ -3,11 +3,9 @@ package com.apirest.apirest.test.model.service;
 import com.apirest.apirest.test.model.dao.IUserDao;
 import com.apirest.apirest.test.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.ws.ServiceMode;
 import java.util.List;
 
 @Service
